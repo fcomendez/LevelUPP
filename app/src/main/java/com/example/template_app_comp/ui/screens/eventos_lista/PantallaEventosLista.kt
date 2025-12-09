@@ -29,6 +29,7 @@ fun PantallaEventosLista(
     viewModel: EventosListaViewModel = viewModel(factory = EventosListaViewModel.factory(LocalContext.current, ciudad)),
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
     val eventos by viewModel.eventos.collectAsState()
     val participandoEnEvento by viewModel.participandoEnEvento.collectAsState()
 
@@ -83,7 +84,6 @@ fun PantallaEventosLista(
                             Card(
                                 onClick = {
                                     // Abrir Google Maps con la dirección
-                                    val context = LocalContext.current
                                     val uri = if (evento.latitud != 0.0 && evento.longitud != 0.0) {
                                         // Usar coordenadas si están disponibles
                                         Uri.parse("geo:${evento.latitud},${evento.longitud}?q=${Uri.encode(evento.direccion)}")
