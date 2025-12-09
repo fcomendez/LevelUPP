@@ -36,6 +36,7 @@ import com.example.template_app_comp.ui.components.DrawerLevelUp
 import com.example.template_app_comp.ui.navigation.Rutas
 import com.example.template_app_comp.ui.screens.carrito.PantallaCarrito
 import com.example.template_app_comp.ui.screens.catalogo.PantallaCatalogo
+import com.example.template_app_comp.ui.screens.pedidos.PantallaPedidos
 import com.example.template_app_comp.ui.screens.configuracion.PantallaConfiguracion
 import com.example.template_app_comp.ui.screens.eventos.PantallaEventos
 import com.example.template_app_comp.ui.screens.eventos_lista.PantallaEventosLista
@@ -179,6 +180,9 @@ fun NavHostController() {
                     }
                     composable(Rutas.CARRITO) {
                         PantallaCarrito(navController)
+                    }
+                    composable(Rutas.PEDIDOS) {
+                        PantallaPedidos(navController)
                     }
                     composable(Rutas.LOGIN) {
                         PantallaLogin(navController)

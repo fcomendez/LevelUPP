@@ -39,6 +39,11 @@ fun PantallaRegistro(
     val isLoading by viewModel.isLoading.collectAsState()
     val errorMessage by viewModel.errorMessage.collectAsState()
     val tieneDescuentoDuoc by viewModel.tieneDescuentoDuoc.collectAsState()
+    val nombreError by viewModel.nombreError.collectAsState()
+    val emailError by viewModel.emailError.collectAsState()
+    val fechaNacimientoError by viewModel.fechaNacimientoError.collectAsState()
+    val passwordError by viewModel.passwordError.collectAsState()
+    val confirmPasswordError by viewModel.confirmPasswordError.collectAsState()
 
     Scaffold(
         topBar = {
@@ -70,10 +75,15 @@ fun PantallaRegistro(
             
             OutlinedTextField(
                 value = nombre,
-                onValueChange = { nombre = it },
+                onValueChange = { 
+                    nombre = it
+                    viewModel.validarNombre(it)
+                },
                 label = { Text("Nombre completo") },
                 modifier = Modifier.fillMaxWidth(),
-                singleLine = true
+                singleLine = true,
+                isError = nombreError != null,
+                supportingText = nombreError?.let { { Text(it) } }
             )
             
             Spacer(modifier = Modifier.height(16.dp))
@@ -86,40 +96,60 @@ fun PantallaRegistro(
                 },
                 label = { Text("Email") },
                 modifier = Modifier.fillMaxWidth(),
-                singleLine = true
+                singleLine = true,
+                isError = emailError != null,
+                supportingText = emailError?.let { { Text(it) } }
             )
             
             Spacer(modifier = Modifier.height(16.dp))
             
             OutlinedTextField(
                 value = fechaNacimiento,
-                onValueChange = { fechaNacimiento = it },
+                onValueChange = { 
+                    fechaNacimiento = it
+                    viewModel.validarFechaNacimiento(it)
+                },
                 label = { Text("Fecha de nacimiento (DD/MM/AAAA)") },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
-                placeholder = { Text("Ej: 01/01/2000") }
+                placeholder = { Text("Ej: 01/01/2000") },
+                isError = fechaNacimientoError != null,
+                supportingText = fechaNacimientoError?.let { { Text(it) } }
             )
             
             Spacer(modifier = Modifier.height(16.dp))
             
             OutlinedTextField(
                 value = password,
-                onValueChange = { password = it },
+                onValueChange = { 
+                    password = it
+                    viewModel.validarPassword(it)
+                    if (confirmPassword.isNotEmpty()) {
+                        viewModel.validarConfirmPassword(it, confirmPassword)
+                    }
+                },
                 label = { Text("Contraseña") },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
-                visualTransformation = PasswordVisualTransformation()
+                visualTransformation = PasswordVisualTransformation(),
+                isError = passwordError != null,
+                supportingText = passwordError?.let { { Text(it) } }
             )
             
             Spacer(modifier = Modifier.height(16.dp))
             
             OutlinedTextField(
                 value = confirmPassword,
-                onValueChange = { confirmPassword = it },
+                onValueChange = { 
+                    confirmPassword = it
+                    viewModel.validarConfirmPassword(password, it)
+                },
                 label = { Text("Confirmar contraseña") },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
-                visualTransformation = PasswordVisualTransformation()
+                visualTransformation = PasswordVisualTransformation(),
+                isError = confirmPasswordError != null,
+                supportingText = confirmPasswordError?.let { { Text(it) } }
             )
             
             if (tieneDescuentoDuoc && email.endsWith("@duoc.cl")) {

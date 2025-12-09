@@ -15,6 +15,7 @@ object Rutas {
     const val RECOMENDACIONES = "recomendaciones"
     const val CONFIGURACION = "configuracion"
     const val CARRITO = "carrito"
+    const val PEDIDOS = "pedidos"
     const val SOPORTE = "soporte"
     const val FAQ = "faq"
     const val CONTACTO = "contacto"

@@ -32,23 +32,89 @@ object DatosFake {
         Producto("PL002", "Polerón Gamer Elite", "Polerón con capucha y diseño gaming", 34990.0, "Polerones Gamers")
     )
 
+    // Direcciones aleatorias por ciudad
+    private val direccionesSantiago = listOf(
+        "Av. Providencia 1234, Providencia" to Pair(-33.4489, -70.6693),
+        "Av. Las Condes 5678, Las Condes" to Pair(-33.4167, -70.5833),
+        "Av. Libertador Bernardo O'Higgins 123, Santiago Centro" to Pair(-33.4489, -70.6483),
+        "Av. Vitacura 2345, Vitacura" to Pair(-33.4000, -70.5667),
+        "Av. Apoquindo 3456, Las Condes" to Pair(-33.4167, -70.6000)
+    )
+    
+    private val direccionesValparaiso = listOf(
+        "Av. Argentina 123, Valparaíso" to Pair(-33.0472, -71.6127),
+        "Plaza Sotomayor 45, Valparaíso" to Pair(-33.0458, -71.6197),
+        "Av. Alemania 567, Valparaíso" to Pair(-33.0500, -71.6000),
+        "Cerro Concepción, Valparaíso" to Pair(-33.0431, -71.6292)
+    )
+    
+    private val direccionesConcepcion = listOf(
+        "Av. O'Higgins 1234, Concepción" to Pair(-36.8201, -73.0444),
+        "Plaza de la Independencia, Concepción" to Pair(-36.8269, -73.0503),
+        "Av. Arturo Prat 567, Concepción" to Pair(-36.8200, -73.0400)
+    )
+    
+    private val direccionesVina = listOf(
+        "Av. Valparaíso 123, Viña del Mar" to Pair(-33.0246, -71.5518),
+        "Av. Libertad 456, Viña del Mar" to Pair(-33.0246, -71.5518),
+        "Plaza Vergara, Viña del Mar" to Pair(-33.0246, -71.5518)
+    )
+    
+    private fun obtenerDireccionAleatoria(ciudad: String): Pair<String, Pair<Double, Double>> {
+        val direcciones = when (ciudad) {
+            "Santiago" -> direccionesSantiago
+            "Valparaiso" -> direccionesValparaiso
+            "Concepcion" -> direccionesConcepcion
+            "Vina del Mar" -> direccionesVina
+            else -> direccionesSantiago
+        }
+        return direcciones.random()
+    }
+
     val eventosPorCiudad = mapOf(
         "Santiago" to listOf(
-            Evento("E001", "Santiago", "2024-12-15 18:00", "Torneo de Catan", "Torneo oficial de Catan en centro de eventos", "placeholder_evento"),
-            Evento("E002", "Santiago", "2024-12-20 19:00", "LAN Party Gaming", "Evento de gaming con PCs y consolas", "placeholder_evento"),
-            Evento("E003", "Santiago", "2024-12-25 17:00", "Expo Tecnologia", "Exposicion de productos gaming y tecnologia", "placeholder_evento")
+            run {
+                val (direccion, coords) = obtenerDireccionAleatoria("Santiago")
+                Evento("E001", "Santiago", "2024-12-15 18:00", "Torneo de Catan", "Torneo oficial de Catan en centro de eventos", "placeholder_evento", direccion, coords.first, coords.second)
+            },
+            run {
+                val (direccion, coords) = obtenerDireccionAleatoria("Santiago")
+                Evento("E002", "Santiago", "2024-12-20 19:00", "LAN Party Gaming", "Evento de gaming con PCs y consolas", "placeholder_evento", direccion, coords.first, coords.second)
+            },
+            run {
+                val (direccion, coords) = obtenerDireccionAleatoria("Santiago")
+                Evento("E003", "Santiago", "2024-12-25 17:00", "Expo Tecnologia", "Exposicion de productos gaming y tecnologia", "placeholder_evento", direccion, coords.first, coords.second)
+            }
         ),
         "Valparaiso" to listOf(
-            Evento("E004", "Valparaiso", "2024-12-18 18:30", "Torneo de Videojuegos", "Competencia de videojuegos locales", "placeholder_evento"),
-            Evento("E005", "Valparaiso", "2024-12-22 20:00", "Meetup Gamers", "Encuentro de gamers de la region", "placeholder_evento")
+            run {
+                val (direccion, coords) = obtenerDireccionAleatoria("Valparaiso")
+                Evento("E004", "Valparaiso", "2024-12-18 18:30", "Torneo de Videojuegos", "Competencia de videojuegos locales", "placeholder_evento", direccion, coords.first, coords.second)
+            },
+            run {
+                val (direccion, coords) = obtenerDireccionAleatoria("Valparaiso")
+                Evento("E005", "Valparaiso", "2024-12-22 20:00", "Meetup Gamers", "Encuentro de gamers de la region", "placeholder_evento", direccion, coords.first, coords.second)
+            }
         ),
         "Concepcion" to listOf(
-            Evento("E006", "Concepcion", "2024-12-16 19:00", "Torneo E-Sports", "Competencia profesional de e-sports", "placeholder_evento"),
-            Evento("E007", "Concepcion", "2024-12-21 18:00", "Expo Gaming Sur", "Exposicion de productos gaming", "placeholder_evento")
+            run {
+                val (direccion, coords) = obtenerDireccionAleatoria("Concepcion")
+                Evento("E006", "Concepcion", "2024-12-16 19:00", "Torneo E-Sports", "Competencia profesional de e-sports", "placeholder_evento", direccion, coords.first, coords.second)
+            },
+            run {
+                val (direccion, coords) = obtenerDireccionAleatoria("Concepcion")
+                Evento("E007", "Concepcion", "2024-12-21 18:00", "Expo Gaming Sur", "Exposicion de productos gaming", "placeholder_evento", direccion, coords.first, coords.second)
+            }
         ),
         "Vina del Mar" to listOf(
-            Evento("E008", "Vina del Mar", "2024-12-19 19:00", "Torneo Gaming Costero", "Competencia de gaming en la costa", "placeholder_evento"),
-            Evento("E009", "Vina del Mar", "2024-12-23 18:00", "Meetup Tech", "Encuentro de tecnologia y gaming", "placeholder_evento")
+            run {
+                val (direccion, coords) = obtenerDireccionAleatoria("Vina del Mar")
+                Evento("E008", "Vina del Mar", "2024-12-19 19:00", "Torneo Gaming Costero", "Competencia de gaming en la costa", "placeholder_evento", direccion, coords.first, coords.second)
+            },
+            run {
+                val (direccion, coords) = obtenerDireccionAleatoria("Vina del Mar")
+                Evento("E009", "Vina del Mar", "2024-12-23 18:00", "Meetup Tech", "Encuentro de tecnologia y gaming", "placeholder_evento", direccion, coords.first, coords.second)
+            }
         )
     )
 

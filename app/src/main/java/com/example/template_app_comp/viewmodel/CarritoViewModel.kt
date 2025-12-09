@@ -6,9 +6,14 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.template_app_comp.data.model.ItemCarrito
 import com.example.template_app_comp.data.model.Producto
+import com.example.template_app_comp.data.model.EstadoPedido
+import com.example.template_app_comp.data.model.Pedido
 import com.example.template_app_comp.data.repository.RepositorioCarrito
+import com.example.template_app_comp.data.repository.RepositorioPedidos
 import com.example.template_app_comp.data.repository.RepositorioProductos
 import com.example.template_app_comp.data.repository.RepositorioUsuario
+import java.text.SimpleDateFormat
+import java.util.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -21,7 +26,8 @@ import kotlinx.coroutines.launch
 class CarritoViewModel(
     private val repositorioCarrito: RepositorioCarrito,
     private val repositorioProductos: RepositorioProductos,
-    private val repositorioUsuario: RepositorioUsuario
+    private val repositorioUsuario: RepositorioUsuario,
+    private val repositorioPedidos: RepositorioPedidos
 ) : ViewModel() {
     private val _items = MutableStateFlow<List<ItemCarrito>>(emptyList())
     val items: StateFlow<List<ItemCarrito>> = _items.asStateFlow()
@@ -41,6 +47,9 @@ class CarritoViewModel(
 
     private val _isProcesandoCompra = MutableStateFlow(false)
     val isProcesandoCompra: StateFlow<Boolean> = _isProcesandoCompra.asStateFlow()
+
+    private val _compraExitosa = MutableStateFlow(false)
+    val compraExitosa: StateFlow<Boolean> = _compraExitosa.asStateFlow()
 
     // StateFlow para cálculos reactivos
     val subtotal: StateFlow<Double> = combine(_items, _productos) { items, productos ->
@@ -164,13 +173,28 @@ class CarritoViewModel(
                     return@launch
                 }*/
                 
-                // 7. Limpiar carrito (solo si todo está bien)
+                // 7. Crear y guardar pedido
+                val fechaActual = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault()).format(Date())
+                val pedidoId = UUID.randomUUID().toString()
+                val pedido = Pedido(
+                    id = pedidoId,
+                    fechaCompra = fechaActual,
+                    productos = itemsActuales,
+                    total = totalCompra,
+                    estado = EstadoPedido.PENDIENTE,
+                    fechaEntregaEstimada = "",
+                    direccionEntrega = "Dirección de entrega predeterminada"
+                )
+                repositorioPedidos.guardarPedido(pedido)
+                
+                // 8. Limpiar carrito (solo si todo está bien)
                 repositorioCarrito.limpiar()
                 
-                // 8. Desactivar carga y mostrar confirmación
+                // 9. Desactivar carga y mostrar confirmación
                 _isProcesandoCompra.value = false
                 _mensajeCompra.value = "¡Compra realizada exitosamente!\nTotal: $${String.format("%.0f", totalCompra)}"
                 _mostrarDialogoConfirmacion.value = true
+                _compraExitosa.value = true
                 
             } catch (e: Exception) {
                 // Manejo de errores completo
@@ -183,6 +207,7 @@ class CarritoViewModel(
 
     fun cerrarDialogo() {
         _mostrarDialogoConfirmacion.value = false
+        _compraExitosa.value = false
     }
 
     companion object {
@@ -192,7 +217,8 @@ class CarritoViewModel(
                     return CarritoViewModel(
                         RepositorioCarrito(context),
                         RepositorioProductos(),
-                        RepositorioUsuario(context)
+                        RepositorioUsuario(context),
+                        RepositorioPedidos(context)
                     ) as T
                 }
             }

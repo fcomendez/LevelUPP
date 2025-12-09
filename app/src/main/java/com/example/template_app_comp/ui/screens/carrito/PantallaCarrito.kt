@@ -7,6 +7,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -33,6 +34,18 @@ fun PantallaCarrito(
     val mostrarDialogo by viewModel.mostrarDialogoConfirmacion.collectAsState()
     val mensajeCompra by viewModel.mensajeCompra.collectAsState()
     val isProcesando by viewModel.isProcesandoCompra.collectAsState()
+    val compraExitosa by viewModel.compraExitosa.collectAsState()
+
+    // Redirección automática después de compra exitosa
+    LaunchedEffect(compraExitosa) {
+        if (compraExitosa && mensajeCompra.contains("exitosamente")) {
+            kotlinx.coroutines.delay(2000) // Esperar 2 segundos para que el usuario vea el mensaje
+            navController.navigate(Rutas.CATALOGO) {
+                popUpTo(Rutas.CARRITO) { inclusive = true }
+            }
+            viewModel.cerrarDialogo()
+        }
+    }
 
     Column(
         modifier = modifier
@@ -178,12 +191,6 @@ fun PantallaCarrito(
                     TextButton(
                         onClick = { 
                             viewModel.cerrarDialogo()
-                            // Si la compra fue exitosa, navegar a inicio
-                            if (mensajeCompra.contains("exitosamente")) {
-                                navController.navigate(Rutas.INICIO) {
-                                    popUpTo(Rutas.CARRITO) { inclusive = true }
-                                }
-                            }
                         }
                     ) {
                         Text("Aceptar")

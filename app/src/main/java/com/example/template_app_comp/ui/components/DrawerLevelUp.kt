@@ -67,6 +67,14 @@ fun DrawerLevelUp(
                 onClick = { onNavigate(Rutas.CARRITO); onClose() },
                 icon = { Icon(Icons.Default.ShoppingBag, contentDescription = null) }
             )
+            if (estaLogueado) {
+                NavigationDrawerItem(
+                    label = { Text("Mis Pedidos") },
+                    selected = currentRoute == Rutas.PEDIDOS,
+                    onClick = { onNavigate(Rutas.PEDIDOS); onClose() },
+                    icon = { Icon(Icons.Default.Receipt, contentDescription = null) }
+                )
+            }
 
             Spacer(modifier = Modifier.height(8.dp))
             HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
